@@ -5,7 +5,10 @@ description = "Default template for PDM package"
 authors = [
     {name = "Robin.Wang", email = "3Jg$94sbQ@q1"},
 ]
-dependencies = []
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.29.0",
+]
 requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
@@ -13,3 +16,6 @@ license = {text = "MIT"}
 
 [tool.pdm]
 distribution = false
+
+[tool.pdm.scripts]
+start = "doppler run -- uvicorn main:app --reload"
