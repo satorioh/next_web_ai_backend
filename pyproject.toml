@@ -9,6 +9,8 @@ dependencies = [
     "fastapi>=0.111.0",
     "uvicorn[standard]>=0.29.0",
     "pydantic-settings>=2.2.1",
+    "boto3>=1.34.102",
+    "logtail-python>=0.2.10",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
