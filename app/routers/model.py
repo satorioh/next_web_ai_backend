@@ -8,4 +8,5 @@ router = APIRouter()
 
 @router.get("/getModelLastUpdateTime")
 async def get_model_time(modelName: ModelNameEnum):
-    return await asyncio.to_thread(get_model_last_update_time, modelName.value)
+    last_update_time = await asyncio.to_thread(get_model_last_update_time, modelName.value)
+    return {"lastUpdateTime": last_update_time}

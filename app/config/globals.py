@@ -14,6 +14,10 @@ class Settings(BaseSettings):
     S3_WEBML_MODEL_URL_PREFIX: str = f"https://{S3_SIG_BUCKET_NAME}.s3.amazonaws.com/{S3_WEBML_FOLDER}/model"
     # -------------日志----------------- #
     LOG_SERVICE_TOKEN: str = os.getenv('LOG_SERVICE_TOKEN')
+    # -------------redis配置--------------- #
+    REDIS_LOCATION: str = os.getenv("REDIS_LOCATION")
+    REDIS_MODEL_NAME_PREFIX: str = "model:last_update_time"
+    REDIS_MODEL_EXPIRE: int = 60 * 60  # 1小时
 
 
 settings = Settings()
