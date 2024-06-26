@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import model
+from .routers import model, webrtc
 from .config.globals import settings
 
 app = FastAPI(root_path=settings.API_PREFIX)
@@ -19,3 +19,4 @@ app.add_middleware(
 )
 
 app.include_router(model.router, prefix="/model", tags=["model"])
+app.include_router(webrtc.router, prefix="/webrtc", tags=["webrtc"])
