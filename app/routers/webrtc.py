@@ -23,6 +23,14 @@ async def handle_offer(req: OfferRequest, request: Request):
 
     logger.info(f"{pc_id} Created for {request.client.host}")
 
+    @pc.on("datachannel")
+    def on_datachannel(channel):
+        @channel.on("message")
+        def on_message(message):
+            logger.info(f"Data channel message: {message}")
+            if isinstance(message, str) and message.startswith("ping"):
+                channel.send("pong" + message[4:])
+
     @pc.on("connectionstatechange")
     async def on_connectionstatechange():
         logger.info(f"Connection state is {pc.connectionState}")
