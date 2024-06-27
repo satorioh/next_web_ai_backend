@@ -27,5 +27,6 @@ distribution = false
 
 [tool.pdm.scripts]
 start = "doppler run -- uvicorn app.main:app --reload"
+startonline = "doppler run -- uvicorn app.main:app --host 0.0.0.0 --port 2096 --reload"
 prod = "doppler run --command='gunicorn app.main:app -c gunicorn.conf.py'"
 kill = { shell = "kill -9 `ps aux |grep gunicorn |grep app.main | awk '{ print $2 }'`"}
