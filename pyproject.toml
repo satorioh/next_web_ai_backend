@@ -13,10 +13,9 @@ dependencies = [
     "logtail-python>=0.2.10",
     "gunicorn>=22.0.0",
     "redis[hiredis]>=5.0.4",
-    "opencv-python>=4.10.0.84",
-    "opencv-contrib-python>=4.10.0.84",
     "aiortc>=1.9.0",
     "numpy==1.26",
+    "opencv-contrib-python-headless>=4.10.0.84",
 ]
 requires-python = "==3.10.*"
 readme = "README.md"
