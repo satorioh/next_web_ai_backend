@@ -27,7 +27,7 @@ async def handle_offer(req: OfferRequest, request: Request):
     def on_datachannel(channel):
         @channel.on("message")
         def on_message(message):
-            logger.info(f"Data channel message: {message}")
+            # logger.info(f"Data channel message: {message}")
             if isinstance(message, str) and message.startswith("ping"):
                 channel.send("pong" + message[4:])
 
