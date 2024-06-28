@@ -1,5 +1,4 @@
 import uuid
-import cv2
 from fastapi import APIRouter, Request
 from ..utils.log import setup_logger
 from ..utils.types import OfferRequest, AnswerResponse
@@ -33,10 +32,16 @@ async def handle_offer(req: OfferRequest, request: Request):
 
     @pc.on("connectionstatechange")
     async def on_connectionstatechange():
-        logger.info(f"Connection state is {pc.connectionState}")
-        if pc.connectionState == "failed":
-            await pc.close()
-            pcs.discard(pc)
+        logger.info(f"{pc_id} is {pc.connectionState}")
+        match pc.connectionState:
+            case "connected":
+                pass
+            case "failed" | "closed":
+                await pc.close()
+                pcs.discard(pc)
+                logger.info(f"pcs length -> {len(pcs)}")
+            case _:
+                pass
 
     @pc.on("track")
     def on_track(track):
