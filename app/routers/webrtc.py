@@ -1,4 +1,5 @@
 import uuid
+import psutil
 from fastapi import APIRouter, Request
 from ..utils.log import setup_logger
 from ..utils.types import OfferRequest, AnswerResponse
@@ -28,7 +29,7 @@ async def handle_offer(req: OfferRequest, request: Request):
         def on_message(message):
             # logger.info(f"Data channel message: {message}")
             if isinstance(message, str) and message.startswith("ping"):
-                channel.send("pong" + message[4:])
+                channel.send("pong" + message[4:] + f" {psutil.cpu_percent()} {len(pcs)}")
 
     @pc.on("connectionstatechange")
     async def on_connectionstatechange():
