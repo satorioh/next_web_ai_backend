@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -8,6 +9,7 @@ from .config.globals import settings
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
+        asyncio.ensure_future(webrtc.check_connections())
         yield
         await webrtc.on_shutdown()
     finally:
