@@ -1,9 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from .routers import model, webrtc
 from .config.globals import settings
 
-app = FastAPI(root_path=settings.API_PREFIX)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        yield
+        await webrtc.on_shutdown()
+    finally:
+        pass
+
+
+app = FastAPI(root_path=settings.API_PREFIX, lifespan=lifespan)
 
 origins = [
     "http://localhost:3000",

@@ -1,3 +1,4 @@
+import asyncio
 import uuid
 import psutil
 from fastapi import APIRouter, Request
@@ -67,3 +68,10 @@ async def handle_offer(req: OfferRequest, request: Request):
     await pc.setLocalDescription(answer)
 
     return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
+
+
+async def on_shutdown():
+    coros = [pc.close() for pc in pcs]
+    await asyncio.gather(*coros)
+    logger.info("All peer connections are closed")
+    pcs.clear()
