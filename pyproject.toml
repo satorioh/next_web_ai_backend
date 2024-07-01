@@ -15,8 +15,9 @@ dependencies = [
     "redis[hiredis]>=5.0.4",
     "aiortc>=1.9.0",
     "numpy==1.26",
-    "opencv-contrib-python-headless>=4.10.0.84",
     "psutil>=6.0.0",
+    "mediapipe>=0.10.14",
+    "opencv-contrib-python-headless>=4.10.0.84",
 ]
 requires-python = "==3.10.*"
 readme = "README.md"

@@ -1,6 +1,9 @@
 import cv2
 from aiortc import MediaStreamTrack
 from av import VideoFrame
+from .magic_shield import ShieldModule
+
+shield_module = ShieldModule()
 
 
 class VideoTransformTrack(MediaStreamTrack):
@@ -21,10 +24,20 @@ class VideoTransformTrack(MediaStreamTrack):
         if self.transform == "edges":
             # perform edge detection
             img = frame.to_ndarray(format="bgr24")
+            print(f"original image:{img.shape}")
             img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
 
             # rebuild a VideoFrame, preserving timing information
             new_frame = VideoFrame.from_ndarray(img, format="bgr24")
+            new_frame.pts = frame.pts
+            new_frame.time_base = frame.time_base
+            return new_frame
+        elif self.transform == "shield":
+            img = frame.to_ndarray(format="bgr24")
+            print(f"original image:{img.shape}")
+            shield_image = shield_module.main(img)
+            print(f"shield image:{shield_image.shape}")
+            new_frame = VideoFrame.from_ndarray(shield_image, format="bgr24")
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
