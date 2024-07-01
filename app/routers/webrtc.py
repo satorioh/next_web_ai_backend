@@ -13,12 +13,15 @@ router = APIRouter()
 logger = setup_logger(__name__)
 pcs = dict()
 relay = MediaRelay()
-CHECK_CONNECTIONS_INTERVAL = 300  # 5min,检查连接的时间间隔
+CHECK_CONNECTIONS_INTERVAL = 60  # 5min,检查连接的时间间隔
 MAX_CONNECTION_TIME = 900  # 15min,最大连接时间
+CPU_THRESHOLD = 80  # CPU利用率阈值
 
 
 @router.post("/offer", response_model=AnswerResponse)
 async def handle_offer(req: OfferRequest, request: Request):
+    if psutil.cpu_percent() > CPU_THRESHOLD:
+        return {"sdp": "", "type": ""}
     offer = RTCSessionDescription(sdp=req.sdp, type=req.type)
 
     pc = RTCPeerConnection()
