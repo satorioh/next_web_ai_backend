@@ -175,7 +175,7 @@ class ShieldModule:
                     image = self.transparent(rotated2, x1, y1, image, shield_size)
         return image
 
-    def main(self, detector, frame):
+    async def main(self, detector, frame):
         while True:
             image = cv2.flip(frame, 1)
             image_for_detect = mp.Image(image_format=mp.ImageFormat.SRGBA, data=cv2.cvtColor(image, cv2.COLOR_BGR2RGBA))

@@ -51,7 +51,7 @@ class VideoTransformTrack(MediaStreamTrack):
             resized_img = cv2.resize(img, (img.shape[1] // 2, img.shape[0] // 2))
 
             # Apply shield_module.main on the resized image
-            shield_image = shield_module.main(detector, resized_img)
+            shield_image = await shield_module.main(detector, resized_img)
 
             # Scale the result back to the original resolution
             shield_image = cv2.resize(shield_image, (img.shape[1], img.shape[0]))
