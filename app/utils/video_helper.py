@@ -1,9 +1,10 @@
 import cv2
 from aiortc import MediaStreamTrack
 from av import VideoFrame
-from .magic_shield import ShieldModule
+from .magic_shield import ShieldModule, init_detector
 
 shield_module = ShieldModule()
+detector = init_detector(shield_module.print_result)
 
 
 class VideoTransformTrack(MediaStreamTrack):
@@ -34,9 +35,7 @@ class VideoTransformTrack(MediaStreamTrack):
             return new_frame
         elif self.transform == "shield":
             img = frame.to_ndarray(format="bgr24")
-            print(f"original image:{img.shape}")
-            shield_image = shield_module.main(img)
-            print(f"shield image:{shield_image.shape}")
+            shield_image = shield_module.main(detector, img)
             new_frame = VideoFrame.from_ndarray(shield_image, format="bgr24")
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base

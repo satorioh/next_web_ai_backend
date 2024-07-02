@@ -42,17 +42,9 @@ class ShieldModule:
             "ring_tip": None,
             "pinky_tip": None
         }
-        self.detector = self.init_detector()
 
     def print_result(self, result: HandLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
         self.result = result
-
-    def init_detector(self):
-        base_options = BaseOptions(model_asset_path=MODEL_PATH, delegate=BaseOptions.Delegate.CPU)
-        options = HandLandmarkerOptions(base_options=base_options, running_mode=VisionRunningMode.LIVE_STREAM,
-                                        num_hands=2,
-                                        result_callback=self.print_result)
-        return HandLandmarker.create_from_options(options)
 
     def draw_line(self, img, p1, p2, size=5):
         cv2.line(img, p1, p2, (50, 50, 255), size)
@@ -153,7 +145,6 @@ class ShieldModule:
 
     def loop_hands_landmark(self, image):
         h, w, c = image.shape
-        print(h, w)
         for index, hand_landmark in enumerate(self.result.hand_landmarks):
             hand = self.hand0 if index == 0 else self.hand1
             # rotate_deg = DEG_0 if index == 0 else DEG_1
@@ -180,16 +171,23 @@ class ShieldModule:
                     image = self.transparent(rotated2, x1, y1, image, shield_size)
         return image
 
-    def main(self, frame):
+    def main(self, detector, frame):
         while True:
-            print("main process")
             image = cv2.flip(frame, 1)
             image_for_detect = mp.Image(image_format=mp.ImageFormat.SRGBA, data=cv2.cvtColor(image, cv2.COLOR_BGR2RGBA))
 
             self.timestamp += 1
-            self.detector.detect_async(image_for_detect, self.timestamp)
+            detector.detect_async(image_for_detect, self.timestamp)
 
             if self.result is not None:
                 shield_image = self.loop_hands_landmark(image)
                 return shield_image
             return image
+
+
+def init_detector(callback):
+    base_options = BaseOptions(model_asset_path=MODEL_PATH, delegate=BaseOptions.Delegate.CPU)
+    options = HandLandmarkerOptions(base_options=base_options, running_mode=VisionRunningMode.LIVE_STREAM,
+                                    num_hands=2,
+                                    result_callback=callback)
+    return HandLandmarker.create_from_options(options)
