@@ -1,6 +1,9 @@
 import mediapipe as mp
 import cv2
 from pathlib import Path
+from ..utils.log import setup_logger
+
+logger = setup_logger(__name__)
 
 BaseOptions = mp.tasks.BaseOptions
 HandLandmarker = mp.tasks.vision.HandLandmarker
@@ -19,6 +22,7 @@ SHIELD_SCALE = 2.0
 
 class ShieldModule:
     def __init__(self):
+        logger.info("init ShieldModule")
         self.result = None
         self.timestamp = 0
         self.deg = 0  # 旋转角度
@@ -158,7 +162,7 @@ class ShieldModule:
 
             # calculate distance and ratio
             ratio, hand_close, hand_open = self.calc_ratio(hand)
-            # print(ratio)
+            # logger.info(ratio)
 
             # draw hand lines or show shield
             if ratio and (0.5 < ratio < SHOW_SHIELD_RATIO):
@@ -186,6 +190,7 @@ class ShieldModule:
 
 
 def init_detector(callback):
+    logger.info("init detector")
     base_options = BaseOptions(model_asset_path=MODEL_PATH, delegate=BaseOptions.Delegate.CPU)
     options = HandLandmarkerOptions(base_options=base_options, running_mode=VisionRunningMode.LIVE_STREAM,
                                     num_hands=2,
