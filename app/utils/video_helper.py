@@ -25,14 +25,25 @@ class VideoTransformTrack(MediaStreamTrack):
         if self.transform == "edges":
             # perform edge detection
             img = frame.to_ndarray(format="bgr24")
-            print(f"original image:{img.shape}")
-            img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
+
+            # Reduce resolution
+            resized_img = cv2.resize(img, (img.shape[1] // 2, img.shape[0] // 2))
+
+            # Apply edge detection on the resized image
+            edges = cv2.Canny(resized_img, 100, 200)
+
+            # Scale the result back to the original resolution
+            edges = cv2.resize(edges, (img.shape[1], img.shape[0]))
+
+            # Convert edges to BGR format
+            edges_bgr = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
 
             # rebuild a VideoFrame, preserving timing information
-            new_frame = VideoFrame.from_ndarray(img, format="bgr24")
+            new_frame = VideoFrame.from_ndarray(edges_bgr, format="bgr24")
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
+
         elif self.transform == "shield":
             img = frame.to_ndarray(format="bgr24")
             shield_image = shield_module.main(detector, img)
