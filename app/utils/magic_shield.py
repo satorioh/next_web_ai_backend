@@ -191,7 +191,7 @@ class ShieldModule:
 
 def init_detector(callback):
     logger.info("init detector")
-    base_options = BaseOptions(model_asset_path=MODEL_PATH, delegate=BaseOptions.Delegate.CPU)
+    base_options = BaseOptions(model_asset_path=MODEL_PATH, delegate=BaseOptions.Delegate.GPU)
     options = HandLandmarkerOptions(base_options=base_options, running_mode=VisionRunningMode.LIVE_STREAM,
                                     num_hands=2,
                                     result_callback=callback)
