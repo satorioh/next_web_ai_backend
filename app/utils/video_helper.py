@@ -27,13 +27,13 @@ class VideoTransformTrack(MediaStreamTrack):
             img = frame.to_ndarray(format="bgr24")
 
             # Reduce resolution
-            resized_img = cv2.resize(img, (img.shape[1] // 2, img.shape[0] // 2))
+            # resized_img = cv2.resize(img, (img.shape[1] // 2, img.shape[0] // 2))
 
             # Apply edge detection on the resized image
-            edges = cv2.Canny(resized_img, 100, 200)
+            edges = cv2.Canny(img, 100, 200)
 
             # Scale the result back to the original resolution
-            edges = cv2.resize(edges, (img.shape[1], img.shape[0]))
+            # edges = cv2.resize(edges, (img.shape[1], img.shape[0]))
 
             # Convert edges to BGR format
             edges_bgr = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
@@ -48,13 +48,13 @@ class VideoTransformTrack(MediaStreamTrack):
             img = frame.to_ndarray(format="bgr24")
 
             # Reduce resolution
-            resized_img = cv2.resize(img, (img.shape[1] // 2, img.shape[0] // 2))
+            # resized_img = cv2.resize(img, (img.shape[1] // 2, img.shape[0] // 2))
 
             # Apply shield_module.main on the resized image
-            shield_image = await shield_module.main(detector, resized_img)
+            shield_image = await shield_module.main(detector, img)
 
             # Scale the result back to the original resolution
-            shield_image = cv2.resize(shield_image, (img.shape[1], img.shape[0]))
+            # shield_image = cv2.resize(shield_image, (img.shape[1], img.shape[0]))
 
             # Rebuild a VideoFrame, preserving timing information
             new_frame = VideoFrame.from_ndarray(shield_image, format="bgr24")

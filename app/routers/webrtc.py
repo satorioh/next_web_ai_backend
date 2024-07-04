@@ -16,18 +16,23 @@ relay = MediaRelay()
 CHECK_CONNECTIONS_INTERVAL = 60  # 5min,检查连接的时间间隔
 MAX_CONNECTION_TIME = 900  # 15min,最大连接时间
 CPU_THRESHOLD = 80  # CPU利用率阈值
+SHIELD_CLIENT_LIMIT = 1  # 最大shield客户端数量
 
 
 @router.post("/offer", response_model=AnswerResponse)
 async def handle_offer(req: OfferRequest, request: Request):
     if psutil.cpu_percent() > CPU_THRESHOLD:
-        return {"sdp": "", "type": ""}
+        return {"sdp": "", "type": "", "errorMsg": "High cpu usage on server, please try again later."}
+    if req.video_transform == "shield":
+        current_shield_client = len([pc for pc in pcs.values() if pc["transform"] == "shield"])
+        if current_shield_client >= SHIELD_CLIENT_LIMIT:
+            return {"sdp": "", "type": "", "errorMsg": "Max client connection limit reached, please try again later."}
     offer = RTCSessionDescription(sdp=req.sdp, type=req.type)
 
     pc = RTCPeerConnection()
     pc_id = f"PeerConnection({uuid.uuid4()})"
     start_time = time.time()
-    pcs[pc_id] = {"pc": pc, "start_time": start_time}
+    pcs[pc_id] = {"pc": pc, "start_time": start_time, "transform": req.video_transform}
 
     logger.info(f"{pc_id} Created for {request.client.host}")
 

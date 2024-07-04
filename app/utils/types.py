@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 from enum import Enum
 
 
@@ -16,3 +17,4 @@ class OfferRequest(BaseModel):
 class AnswerResponse(BaseModel):
     sdp: str
     type: str
+    errorMsg: Optional[str] = None
